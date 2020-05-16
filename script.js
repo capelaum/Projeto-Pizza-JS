@@ -127,13 +127,20 @@ sel('.pizzaInfo--addButton').addEventListener('click', () => {
 
 //* Updates Cart 
 function updateCart(){
+    
     if(cart.length > 0) {
         sel('aside').classList.add('show');
         sel('.cart').innerHTML = '';    // resets the cart to update
 
+        let subtotal = 0;
+        let desconto = 0;
+        let total = 0;
+
         for(let i in cart) {
             // find the object pizza from cart
             let pizzaItem = pizzaJson.find((item) => item.id == cart[i].id);
+            subtotal += pizzaItem.price * cart[i].qt;
+
             let cartItem = sel('.models .cart--item').cloneNode(true);
             
             let pizzaSizeName;
@@ -150,7 +157,6 @@ function updateCart(){
             }
 
             let pizzaName = `${pizzaItem.name} (${pizzaSizeName})`;
-
             cartItem.querySelector('img').src = pizzaItem.img;
             cartItem.querySelector('.cart--item-nome').innerHTML = pizzaName;
             cartItem.querySelector('.cart--item--qt').innerHTML = cart[i].qt;
@@ -161,7 +167,6 @@ function updateCart(){
             });
 
             cartItem.querySelector('.cart--item-qtmenos').addEventListener('click', () => {
-                
                 if(cart[i].qt > 1) {
                     cart[i].qt--;
                 }else {
@@ -172,7 +177,16 @@ function updateCart(){
 
             sel('.cart').append(cartItem);
         }// end for in cart[]
+
+        desconto = subtotal * 0.1;
+        total = subtotal - desconto;
+
+        sel('.subtotal span:last-child').innerHTML = `R$ ${subtotal.toFixed(2)}`;
+        sel('.desconto span:last-child').innerHTML = `R$ ${desconto.toFixed(2)}`;
+        sel('.total span:last-child').innerHTML = `R$ ${total.toFixed(2)}`;
+    
     }else {
+
         sel('aside').classList.remove('show');
     }
 }
