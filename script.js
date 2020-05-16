@@ -1,15 +1,17 @@
-//* encapsulate the Selectors comands
+//* Encapsulate the Selectors comands
 const sel = (el) => document.querySelector(el);
 const all = (el) => document.querySelectorAll(el);
 
-let modalQt = 1;    
+let cart = []; 
+let modalKey = 0;
+let modalQt = 1;   
 
 // Pizza maping ant listing
 pizzaJson.map((pizza, index) => {
     // clones the pizza item and content
     let pizzaItem = sel('.models .pizza-item').cloneNode(true);
     
-    // Generate an identifier for tthe pizza
+    // Generate an attribute data-key to the pizza-item
     pizzaItem.setAttribute('data-key', index);
 
     // Pizza itens info 
@@ -24,7 +26,7 @@ pizzaJson.map((pizza, index) => {
 
         //* Get the pizza key
         let key = e.target.closest('.pizza-item').getAttribute('data-key');
-
+        modalKey = key;
         modalQt = 1;    // reset pizza qtd 
 
         sel('.pizzaBig img').src = pizzaJson[key].img;
@@ -76,6 +78,7 @@ sel('.pizzaInfo--qtmenos').addEventListener('click', () => {
         sel('.pizzaInfo--qt').innerHTML = modalQt;
     }
 });
+
 // max = 50 pizzas
 sel('.pizzaInfo--qtmais').addEventListener('click', () => {
     if(modalQt < 50){
@@ -83,6 +86,7 @@ sel('.pizzaInfo--qtmais').addEventListener('click', () => {
         sel('.pizzaInfo--qt').innerHTML = modalQt;
     }
 });
+
 // select size
 all('.pizzaInfo--size').forEach((size, sizeIndex) => {
     size.addEventListener('click', (e) => {
@@ -92,4 +96,34 @@ all('.pizzaInfo--size').forEach((size, sizeIndex) => {
         // add
         size.classList.add('selected');
     })
+});
+
+//* Add to Cart 
+sel('.pizzaInfo--addButton').addEventListener('click', () => {
+    
+    // selected size
+    let size = parseInt( sel('.pizzaInfo--size.selected').getAttribute('data-key') );
+
+    // id@size - identifier 
+    let identifier = pizzaJson[modalKey].id + '@' + size;
+
+    //* Return -1: if doesnt find an index with the same identifier 
+    let key = cart.findIndex((item) => item.identifier == identifier);
+    console.log('key = ' + key);
+
+    // Pushing to Cart..
+    if(key > -1) {
+        cart[key].qtd += modalQt;   //* updates qtd only if it's already in cart
+    }else{
+        cart.push({
+            identifier,
+            id: pizzaJson[modalKey].id,
+            size,
+            qtd: modalQt
+        });
+    }
+
+
+    closeModal();
+
 });
