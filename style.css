@@ -24,6 +24,9 @@ header {
     justify-content: flex-end;
     align-items: center;
 }
+main span{
+    color: #388bc5;
+}
 .menu-openner {
     margin-right: 15px;
     font-size: 26px;

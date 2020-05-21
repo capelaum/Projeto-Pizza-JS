@@ -5,19 +5,20 @@ const all = (el) => document.querySelectorAll(el);
 let cart = []; 
 let modalKey = 0;
 let modalQt = 1;   
+let pizzaPrice = 0;
 
 // Pizza maping ant listing
 pizzaJson.map((pizza, index) => {
     // clones the pizza item and content
     let pizzaItem = sel('.models .pizza-item').cloneNode(true);
     
-    // Generate an attribute data-key to the pizza-item
+    //* Generate an attribute data-key to the pizza-item
     pizzaItem.setAttribute('data-key', index);
 
     // Pizza itens info 
     pizzaItem.querySelector('.pizza-item--img img').src = pizza.img;
-    pizzaItem.querySelector('.pizza-item--price').innerHTML = `R$ ${pizza.price.toFixed(2)}`;
-    pizzaItem.querySelector('.pizza-item--name').innerHTML = pizza.name;
+    pizzaItem.querySelector('.pizza-item--price').innerHTML = `R$ ${pizza.prices[2].toFixed(2)}`;
+    pizzaItem.querySelector('.pizza-item--name').innerHTML = pizza.name + " (G)";
     pizzaItem.querySelector('.pizza-item--desc').innerHTML = pizza.description;
 
     // Show Modal Event
@@ -32,10 +33,27 @@ pizzaJson.map((pizza, index) => {
         sel('.pizzaBig img').src = pizzaJson[key].img;
         sel('.pizzaInfo h1').innerHTML = pizzaJson[key].name;
         sel('.pizzaInfo--desc').innerHTML = pizzaJson[key].description;
-        sel('.pizzaInfo--actualPrice').innerHTML = `R$ ${pizzaJson[key].price.toFixed(2)}`;
+        sel('.pizzaInfo--actualPrice').innerHTML = `R$ ${pizzaJson[key].prices[2].toFixed(2)}`;
 
         // remove selected size item
         sel('.pizzaInfo--size.selected').classList.remove('selected');
+
+        //! Evento de clique que troca o tamanho da pizza e seleciona o preço correspondente conforme o tamanho
+        all(".pizzaInfo--size").forEach( (size, sizeIndex) => { 
+
+            size.addEventListener("click", () => {
+                console.log('sizeIndex = ', sizeIndex);
+
+                sel(".pizzaInfo--size.selected").classList.remove("selected");
+                size.classList.add("selected");
+
+                pizzaSize = sizeIndex;
+                pizzaPrice = pizzaJson[parseInt(key)].prices[sizeIndex];
+
+                sel(".pizzaInfo--actualPrice").innerHTML = `R$ ${(pizzaPrice * modalQt).toFixed(2)}`;
+            });
+        });
+        
         all('.pizzaInfo--size').forEach((size, sizeIndex) => {
             //* big size selected!
             if(sizeIndex == 2){
@@ -53,7 +71,7 @@ pizzaJson.map((pizza, index) => {
         setTimeout(() => {
             sel('.pizzaWindowArea').style.opacity = 1;
         }, 200);
-    });
+    });// end modal
 
     sel('.pizza-area').append(pizzaItem);   // insert pizzaItem
 });
@@ -76,6 +94,8 @@ sel('.pizzaInfo--qtmenos').addEventListener('click', () => {
     if(modalQt > 1){
         modalQt--;
         sel('.pizzaInfo--qt').innerHTML = modalQt;
+
+        sel(".pizzaInfo--actualPrice").innerHTML = `R$ ${(pizzaPrice * modalQt).toFixed(2)}`;
     }
 });
 
@@ -84,6 +104,7 @@ sel('.pizzaInfo--qtmais').addEventListener('click', () => {
     if(modalQt < 50){
         modalQt++;
         sel('.pizzaInfo--qt').innerHTML = modalQt;
+        sel(".pizzaInfo--actualPrice").innerHTML = `R$ ${(pizzaPrice * modalQt).toFixed(2)}`;
     }
 });
 
@@ -137,7 +158,6 @@ sel('.menu-closer').addEventListener('click', () =>{
     sel('aside').style.left = '100vw';
 });
 
-
 //* Updates Cart 
 function updateCart(){
 
@@ -155,7 +175,7 @@ function updateCart(){
         for(let i in cart) {
             // find the object pizza from cart
             let pizzaItem = pizzaJson.find((item) => item.id == cart[i].id);
-            subtotal += pizzaItem.price * cart[i].qt;
+            //subtotal += pizzaItem.prices[i] * cart[i].qt;
 
             let cartItem = sel('.models .cart--item').cloneNode(true);
             
@@ -163,12 +183,15 @@ function updateCart(){
             switch(cart[i].size){
                 case 0:
                     pizzaSizeName = 'P';
+                    subtotal += pizzaItem.prices[0] * cart[i].qt;
                     break;
                 case 1:
                     pizzaSizeName = 'M';
+                    subtotal += pizzaItem.prices[1] * cart[i].qt;
                     break;
                 case 2:
                     pizzaSizeName = 'G';
+                    subtotal += pizzaItem.prices[2] * cart[i].qt;
                     break;
             }
 
