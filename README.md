@@ -1,4 +1,4 @@
-# Projeto Pizza JS (Front-end)
+# Projeto Pizza JS (Front-end) :pizza:
 
 Site de Carrinho de compras para pedidos de pizzas.
 
