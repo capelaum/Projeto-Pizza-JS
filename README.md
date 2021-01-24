@@ -1,10 +1,9 @@
-# Projeto Pizza JS (Front-end) :pizza:
+# Projeto JS Pizza Menu :pizza:
 
-Site de Carrinho de compras para pedidos de pizzas.
-
+Site de Menu com Carrinho de compras para pedidos de pizzas.
 Feito com HTML+CSS e JavaScript puro.
 
-## Site Link: [JS Pizzas cart][1]
+## Site Link: [JS Pizzas Menu][1]
 ### Feito no curso de Javascript da [B7Web][2]
 
 [1]: https://capelaum-pizza-cart.netlify.app/
