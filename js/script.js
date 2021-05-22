@@ -2,9 +2,9 @@
 const sel = el => document.querySelector(el);
 const all = el => document.querySelectorAll(el);
 
-const pizzaSizeList = all(".pizza-info--size");
-
 const pizzaModal = document.querySelector(".pizza-modal");
+const pizzaSizeList = all(".pizza-info--size");
+const pizzaArea = sel(".pizza-area");
 
 let cart = [];
 let modalKey = 0;
@@ -13,7 +13,7 @@ let pizzaPrice = 0;
 
 PizzaList.forEach((pizza, index) => {
   const pizzaItem = setPizzaItemDOM(pizza, index);
-  sel(".pizza-area").innerHTML += pizzaItem; // insert pizzaItem
+  pizzaArea.innerHTML += pizzaItem;
 });
 
 function setPizzaItemDOM(pizza, index) {
@@ -34,7 +34,7 @@ function setPizzaItemDOM(pizza, index) {
 function openPizzaItemModal(event) {
   event.preventDefault();
 
-  setPizzaModalDOM(event);
+  setPizzaItemModalDOM(event);
   openModal();
 }
 
@@ -53,7 +53,7 @@ function closeModal() {
   }, 500);
 }
 
-function setPizzaModalDOM(e) {
+function setPizzaItemModalDOM(e) {
   let pizzaIndex = e.target.closest(".pizza-item").getAttribute("data-key");
   modalKey = pizzaIndex;
   modalQt = 1; // initial pizza qtd
@@ -71,24 +71,27 @@ function setPizzaModalDOM(e) {
 }
 
 function setPizzaPrices(pizzaIndex) {
-
-  pizzaSizeList.forEach((size, index) => {
-    pizzaPrice = PizzaList[parseInt(pizzaIndex)].prices[index];
+  pizzaSizeList.forEach((size, sizeIndex) => {
+    // initial -> pizza G
+    if (sizeIndex === 2) setSelectedSize(size);
 
     size.addEventListener("click", () => {
-      sel(".pizza-info--size.selected").classList.remove("selected");
-      size.classList.add("selected");
-      pizzaPrice = PizzaList[parseInt(pizzaIndex)].prices[index];
+      setSelectedSize(size);
+
+      pizzaPrice = PizzaList[Number(pizzaIndex)].prices[sizeIndex];
       sel(".pizza-info--actualPrice").innerHTML = `R$ ${(
         pizzaPrice * modalQt
       ).toFixed(2)}`;
     });
 
-    size.querySelector("span").innerHTML = PizzaList[pizzaIndex].sizes[index];
+    size.querySelector("span").innerHTML = PizzaList[pizzaIndex].sizes[sizeIndex];
   });
 }
 
-
+function setSelectedSize(size) {
+  sel(".pizza-info--size.selected").classList.remove("selected");
+  size.classList.add("selected");
+}
 
 // seting the quantity buttons
 sel(".pizza-info--qtmenos").addEventListener("click", () => {
@@ -117,7 +120,9 @@ sel(".pizza-info--qtmais").addEventListener("click", () => {
 //* Add to Cart
 sel(".pizza-info--addButton").addEventListener("click", () => {
   // get selected size
-  let size = parseInt(sel(".pizza-info--size.selected").getAttribute("data-key"));
+  let size = parseInt(
+    sel(".pizza-info--size.selected").getAttribute("data-key")
+  );
 
   // id@size = identifier
   let identifier = PizzaList[modalKey].id + "@" + size;
