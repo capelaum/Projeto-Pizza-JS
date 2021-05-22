@@ -27,20 +27,7 @@ PizzaList.forEach((pizza, index) => {
 
 Modal.setQuantityEvents();
 Modal.setAddToCartEvent();
-
-/* Cart Menu Mobile */
-
-// Open
-sel(".menu-openner").addEventListener("click", () => {
-  if (cart.length > 0) {
-    sel("aside").style.left = "0";
-  }
-});
-
-// Close
-sel(".menu-closer").addEventListener("click", () => {
-  sel("aside").style.left = "100vw";
-});
+Cart.setMenuMobileEvents();
 
 function formatPrice(price) {
   return (price.toFixed(2)).toString().replace(".", ",");

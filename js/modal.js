@@ -103,12 +103,12 @@ const Modal = {
   setAddToCartEvent() {
     Modal.addToCartButton.addEventListener("click", () => {
       // get selected size
-      const size = parseInt(
+      const sizeIndex = parseInt(
         sel(".pizza-info--size.selected").getAttribute("data-key")
       );
 
       // id@size = identifier
-      const identifier = PizzaList[modalKey].id + "@" + size;
+      const identifier = PizzaList[modalKey].id + "@" + sizeIndex;
       const key = cart.findIndex(item => item.identifier == identifier);
 
       //* if it is already in cart
@@ -119,7 +119,7 @@ const Modal = {
         const cartItem = {
           identifier,
           id: PizzaList[modalKey].id,
-          size,
+          sizeIndex,
           qt: modalQt,
         };
 

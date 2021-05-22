@@ -1,14 +1,16 @@
 const Cart = {
+  cartElement: sel("aside"),
+  cartPizzas: sel(".cart"),
+  subtotalElement: sel(".cart-value-subtotal"),
+  descontoElement: sel(".cart-value-desconto"),
+  totalElement: sel(".cart-value-total"),
   subtotal: 0,
   desconto: 0,
   total: 0,
 
-  cartElement: sel("aside"),
-  cartPizzas: sel(".cart"),
-
-  setCartItem(pizzaItem, cartIndex) {
-    const pizzaSizeName = Cart.setPizzaSizeName(pizzaItem, cart[cartIndex]);
-    const pizzaName = `${pizzaItem.name} (${pizzaSizeName})`;
+  setPizzaItemDOM(pizzaItem, cartIndex) {
+    const pizzaInfo = Cart.setPizzaSizeName(pizzaItem, cart[cartIndex]);
+    const pizzaName = `${pizzaItem.name} ${pizzaInfo}`;
 
     const cartItem = `
     <div class="cart--item">
@@ -25,22 +27,26 @@ const Cart = {
   },
 
   setPizzaSizeName(pizzaItem, cartItem) {
-    let pizzaSizeName;
-    switch (cartItem.size) {
+    let pizzaInfo;
+    let pizzaPrice;
+
+    switch (cartItem.sizeIndex) {
       case 0:
-        pizzaSizeName = "P";
-        Cart.subtotal += pizzaItem.prices[0] * cartItem.qt;
+        pizzaPrice = pizzaItem.prices[0];
+        pizzaInfo = `(P)<br>R$ ${formatPrice(pizzaPrice)}`;
         break;
       case 1:
-        pizzaSizeName = "M";
-        Cart.subtotal += pizzaItem.prices[1] * cartItem.qt;
+        pizzaPrice = pizzaItem.prices[1];
+        pizzaInfo = `(M)<br>R$ ${formatPrice(pizzaPrice)}`;
         break;
       case 2:
-        pizzaSizeName = "G";
-        Cart.subtotal += pizzaItem.prices[2] * cartItem.qt;
+        pizzaPrice = pizzaItem.prices[2];
+        pizzaInfo = `(G)<br>R$ ${formatPrice(pizzaPrice)}`;
         break;
     }
-    return pizzaSizeName;
+
+    Cart.subtotal += pizzaPrice * cartItem.qt;
+    return pizzaInfo;
   },
 
   addCartItem(cartIndex) {
@@ -63,32 +69,50 @@ const Cart = {
     sel(".menu-openner span").innerHTML = cart.length;
 
     if (cart.length > 0) {
-      // resets the cart to update
-      Cart.cartPizzas.innerHTML = "";
-      Cart.subtotal = 0;
-      Cart.desconto = 0;
-      Cart.total = 0;
+      // reset cart to update
+      Cart.reset();
       Cart.cartElement.classList.add("show");
 
-      for (let cartIndex in cart) {
+      cart.forEach((cartItem, cartIndex) => {
         // find the object pizza from cart
-        let pizzaItem = PizzaList.find(
-          pizza => pizza.id === cart[cartIndex].id
-        );
+        let pizzaItem = PizzaList.find(pizza => pizza.id === cartItem.id);
 
-        const cartItem = Cart.setCartItem(pizzaItem, cartIndex);
-        Cart.cartPizzas.innerHTML += cartItem;
-      }
+        const pizzaItemElement = Cart.setPizzaItemDOM(pizzaItem, cartIndex);
+        Cart.cartPizzas.innerHTML += pizzaItemElement;
+      });
 
-      Cart.desconto = Cart.subtotal * 0.1;
-      Cart.total = Cart.subtotal - Cart.desconto;
-
-      sel(".cart-value-subtotal").innerHTML = `R$ ${Cart.subtotal.toFixed(2)}`;
-      sel(".cart-value-desconto").innerHTML = `R$ ${Cart.desconto.toFixed(2)}`;
-      sel(".cart-value-total").innerHTML = `R$ ${Cart.total.toFixed(2)}`;
+      Cart.setValues();
     } else {
       Cart.cartElement.classList.remove("show");
       Cart.cartElement.style.left = "100vw";
     }
+  },
+
+  reset() {
+    Cart.cartPizzas.innerHTML = "";
+    Cart.subtotal = 0;
+    Cart.desconto = 0;
+    Cart.total = 0;
+  },
+
+  setValues() {
+    Cart.desconto = Cart.subtotal * 0.1;
+    Cart.total = Cart.subtotal - Cart.desconto;
+
+    Cart.subtotalElement.innerHTML = `R$ ${formatPrice(Cart.subtotal)}`;
+    Cart.descontoElement.innerHTML = `R$ ${formatPrice(Cart.desconto)}`;
+    Cart.totalElement.innerHTML = `R$ ${formatPrice(Cart.total)}`;
+  },
+
+  setMenuMobileEvents() {
+    sel(".menu-openner").addEventListener("click", () => {
+      if (cart.length > 0) {
+        sel("aside").style.left = "0";
+      }
+    });
+
+    sel(".menu-closer").addEventListener("click", () => {
+      sel("aside").style.left = "100vw";
+    });
   },
 };
