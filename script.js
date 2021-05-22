@@ -9,7 +9,7 @@ let modalKey = 0;
 let modalQt = 1;
 let pizzaPrice = 0;
 
-pizzaJson.map((pizza, index) => {
+PizzaList.map((pizza, index) => {
   // clones pizza item and content
   let pizzaItem = sel(".models .pizza-item").cloneNode(true);
 
@@ -39,10 +39,10 @@ function openPizzaItemModal(event) {
   modalKey = key;
   modalQt = 1; // initial pizza qtd
 
-  sel(".pizzaBig img").src = pizzaJson[key].img;
-  sel(".pizzaInfo h1").innerHTML = pizzaJson[key].name;
-  sel(".pizzaInfo--desc").innerHTML = pizzaJson[key].description;
-  sel(".pizzaInfo--actualPrice").innerHTML = `R$ ${pizzaJson[
+  sel(".pizzaBig img").src = PizzaList[key].img;
+  sel(".pizzaInfo h1").innerHTML = PizzaList[key].name;
+  sel(".pizzaInfo--desc").innerHTML = PizzaList[key].description;
+  sel(".pizzaInfo--actualPrice").innerHTML = `R$ ${PizzaList[
     key
   ].prices[2].toFixed(2)}`;
 
@@ -51,12 +51,12 @@ function openPizzaItemModal(event) {
 
   //! preço por tamanho
   all(".pizzaInfo--size").forEach((size, index) => {
-    pizzaPrice = pizzaJson[parseInt(key)].prices[index];
+    pizzaPrice = PizzaList[parseInt(key)].prices[index];
 
     size.addEventListener("click", () => {
       sel(".pizzaInfo--size.selected").classList.remove("selected");
       size.classList.add("selected");
-      pizzaPrice = pizzaJson[parseInt(key)].prices[index];
+      pizzaPrice = PizzaList[parseInt(key)].prices[index];
       sel(".pizzaInfo--actualPrice").innerHTML = `R$ ${(
         pizzaPrice * modalQt
       ).toFixed(2)}`;
@@ -65,7 +65,7 @@ function openPizzaItemModal(event) {
     //* big size selected!
     if (index === 2) size.classList.add("selected");
 
-    size.querySelector("span").innerHTML = pizzaJson[key].sizes[index];
+    size.querySelector("span").innerHTML = PizzaList[key].sizes[index];
   });
 
   sel(".pizzaInfo--qt").innerHTML = modalQt;
@@ -133,7 +133,7 @@ sel(".pizzaInfo--addButton").addEventListener("click", () => {
   );
 
   // id@size = identifier
-  let identifier = pizzaJson[modalKey].id + "@" + size;
+  let identifier = PizzaList[modalKey].id + "@" + size;
 
   //* Return -1: if doesn't find an index with the same identifier
   let key = cart.findIndex(item => item.identifier == identifier);
@@ -144,7 +144,7 @@ sel(".pizzaInfo--addButton").addEventListener("click", () => {
   } else {
     cart.push({
       identifier,
-      id: pizzaJson[modalKey].id,
+      id: PizzaList[modalKey].id,
       size,
       qt: modalQt,
     });
@@ -182,7 +182,7 @@ function updateCart() {
 
     for (let i in cart) {
       // find the object pizza from cart
-      let pizzaItem = pizzaJson.find(item => item.id == cart[i].id);
+      let pizzaItem = PizzaList.find(item => item.id == cart[i].id);
       //subtotal += pizzaItem.prices[i] * cart[i].qt;
 
       let cartItem = sel(".models .cart--item").cloneNode(true);
