@@ -2,62 +2,75 @@
 const sel = el => document.querySelector(el);
 const all = el => document.querySelectorAll(el);
 
-const pizzaWindowArea = document.querySelector(".pizzaWindowArea");
+const pizzaModal = document.querySelector(".pizza-modal");
 
 let cart = [];
 let modalKey = 0;
 let modalQt = 1;
 let pizzaPrice = 0;
 
-PizzaList.map((pizza, index) => {
-  // clones pizza item and content
-  let pizzaItem = sel(".models .pizza-item").cloneNode(true);
-
-  //* Generate an attribute data-key to the pizza-item
-  pizzaItem.setAttribute("data-key", index);
-
-  // Pizza item info
-  pizzaItem.querySelector(".pizza-item--img img").src = pizza.img;
-  pizzaItem.querySelector(
-    ".pizza-item--price"
-  ).innerHTML = `R$ ${pizza.prices[2].toFixed(2)}`;
-  pizzaItem.querySelector(".pizza-item--name").innerHTML = pizza.name + " (G)";
-  pizzaItem.querySelector(".pizza-item--desc").innerHTML = pizza.description;
-
-  // Show Modal Event
-  const pizzaItemButton = pizzaItem.querySelector("a");
-  pizzaItemButton.addEventListener("click", openPizzaItemModal); // end modal
-
-  sel(".pizza-area").append(pizzaItem); // insert pizzaItem
+PizzaList.forEach((pizza, index) => {
+  const pizzaItem = setPizzaItemDOM(pizza, index);
+  sel(".pizza-area").innerHTML += pizzaItem; // insert pizzaItem
 });
+
+function setPizzaItemDOM(pizza, index) {
+  const pizzaItem = `
+    <div class="pizza-item" data-key=${index}>
+      <div class="pizza-item--img"><img src=${pizza.img} /></div>
+      <a href="" class="pizza-item--link">
+        <div class="pizza-item--add" onclick="openPizzaItemModal(event)">+</div>
+      </a>
+      <div class="pizza-item--price">R$ ${pizza.prices[2].toFixed(2)}</div>
+      <div class="pizza-item--name">${pizza.name} (G)</div>
+      <div class="pizza-item--desc">${pizza.description}</div>
+    </div>`;
+
+  return pizzaItem;
+}
 
 function openPizzaItemModal(event) {
   event.preventDefault();
 
+  setPizzaModalDOM(event);
+
+  // remove selected size item
+  sel(".pizza-info--size.selected").classList.remove("selected");
+
+
+
+  sel(".pizza-info--qt").innerHTML = modalQt;
+  pizzaModal.style.opacity = 0;
+  pizzaModal.style.display = "flex";
+
+  // faz efeito suave
+  setTimeout(() => {
+    pizzaModal.style.opacity = 1;
+  }, 200);
+}
+
+function setPizzaModalDOM(e) {
   //* Get the pizza key
-  let key = event.target.closest(".pizza-item").getAttribute("data-key");
+  let key = e.target.closest(".pizza-item").getAttribute("data-key");
   modalKey = key;
   modalQt = 1; // initial pizza qtd
 
-  sel(".pizzaBig img").src = PizzaList[key].img;
-  sel(".pizzaInfo h1").innerHTML = PizzaList[key].name;
-  sel(".pizzaInfo--desc").innerHTML = PizzaList[key].description;
-  sel(".pizzaInfo--actualPrice").innerHTML = `R$ ${PizzaList[
+  sel(".pizza-modal-img").src = PizzaList[key].img;
+  sel(".pizza-info h1").innerHTML = PizzaList[key].name;
+  sel(".pizza-info--desc").innerHTML = PizzaList[key].description;
+  sel(".pizza-info--actualPrice").innerHTML = `R$ ${PizzaList[
     key
   ].prices[2].toFixed(2)}`;
 
-  // remove selected size item
-  sel(".pizzaInfo--size.selected").classList.remove("selected");
-
   //! preço por tamanho
-  all(".pizzaInfo--size").forEach((size, index) => {
+  all(".pizza-info--size").forEach((size, index) => {
     pizzaPrice = PizzaList[parseInt(key)].prices[index];
 
     size.addEventListener("click", () => {
-      sel(".pizzaInfo--size.selected").classList.remove("selected");
+      sel(".pizza-info--size.selected").classList.remove("selected");
       size.classList.add("selected");
       pizzaPrice = PizzaList[parseInt(key)].prices[index];
-      sel(".pizzaInfo--actualPrice").innerHTML = `R$ ${(
+      sel(".pizza-info--actualPrice").innerHTML = `R$ ${(
         pizzaPrice * modalQt
       ).toFixed(2)}`;
     });
@@ -67,58 +80,51 @@ function openPizzaItemModal(event) {
 
     size.querySelector("span").innerHTML = PizzaList[key].sizes[index];
   });
-
-  sel(".pizzaInfo--qt").innerHTML = modalQt;
-  pizzaWindowArea.style.opacity = 0;
-  pizzaWindowArea.style.display = "flex";
-
-  // faz efeito suave
-  setTimeout(() => {
-    pizzaWindowArea.style.opacity = 1;
-  }, 200);
 }
 
 function closeModal() {
-  pizzaWindowArea.style.opacity = 0;
+  pizzaModal.style.opacity = 0;
   setTimeout(() => {
-    pizzaWindowArea.style.display = "none";
+    pizzaModal.style.display = "none";
   }, 500);
 }
 
 // Array of 2 Cancel Buttons
-all(".pizzaInfo--cancelButton, .pizzaInfo--cancelMobileButton").forEach(btn => {
-  btn.addEventListener("click", closeModal);
-});
+all(".pizza-info--cancelButton, .pizza-info--cancelMobileButton").forEach(
+  btn => {
+    btn.addEventListener("click", closeModal);
+  }
+);
 
 // seting the qt buttons
-sel(".pizzaInfo--qtmenos").addEventListener("click", () => {
+sel(".pizza-info--qtmenos").addEventListener("click", () => {
   if (modalQt > 1) {
     modalQt--;
-    sel(".pizzaInfo--qt").innerHTML = modalQt;
+    sel(".pizza-info--qt").innerHTML = modalQt;
 
-    sel(".pizzaInfo--actualPrice").innerHTML = `R$ ${(
+    sel(".pizza-info--actualPrice").innerHTML = `R$ ${(
       pizzaPrice * modalQt
     ).toFixed(2)}`;
   }
 });
 
 // max = 50 pizzas
-sel(".pizzaInfo--qtmais").addEventListener("click", () => {
+sel(".pizza-info--qtmais").addEventListener("click", () => {
   if (modalQt < 50) {
     modalQt++;
-    sel(".pizzaInfo--qt").innerHTML = modalQt;
+    sel(".pizza-info--qt").innerHTML = modalQt;
 
-    sel(".pizzaInfo--actualPrice").innerHTML = `R$ ${(
+    sel(".pizza-info--actualPrice").innerHTML = `R$ ${(
       pizzaPrice * modalQt
     ).toFixed(2)}`;
   }
 });
 
 // select size
-all(".pizzaInfo--size").forEach((size, index) => {
+all(".pizza-info--size").forEach((size, index) => {
   size.addEventListener("click", e => {
     // reset
-    sel(".pizzaInfo--size.selected").classList.remove("selected");
+    sel(".pizza-info--size.selected").classList.remove("selected");
 
     // add
     size.classList.add("selected");
@@ -126,10 +132,10 @@ all(".pizzaInfo--size").forEach((size, index) => {
 });
 
 //* Add to Cart
-sel(".pizzaInfo--addButton").addEventListener("click", () => {
+sel(".pizza-info--addButton").addEventListener("click", () => {
   // get selected size
   let size = parseInt(
-    sel(".pizzaInfo--size.selected").getAttribute("data-key")
+    sel(".pizza-info--size.selected").getAttribute("data-key")
   );
 
   // id@size = identifier

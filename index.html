@@ -13,17 +13,6 @@
 <body>
   <div class="models">
 
-    <div class="pizza-item">
-      <div class="pizza-item--img"><img src="" /></div>
-      <a href="" class="pizza-item--link">
-        <div class="pizza-item--add">+</div>
-      </a>
-      <div class="pizza-item--price">R$ --</div>
-      <div class="pizza-item--name">--</div>
-      <div class="pizza-item--desc">--</div>
-    </div>
-    <!--pizza-item-->
-
     <div class="cart--item">
       <img src="" />
       <div class="cart--item-nome">--</div>
@@ -37,6 +26,7 @@
 
   </div>
   <!--models-->
+
   <header>
     <div class="menu-openner"><span>0</span>🛒</div>
   </header>
@@ -68,50 +58,43 @@
     </div>
     <!--cart--area-->
   </aside>
+
   <!--Modal-->
-  <div class="pizzaWindowArea">
-    <div class="pizzaWindowBody">
-      <div class="pizzaInfo--cancelMobileButton">Voltar</div>
-      <div class="pizzaBig">
-        <img src="" />
-      </div>
-      <div class="pizzaInfo">
+  <div class="pizza-modal">
+    <div class="pizza-modal-content">
+      <div class="pizza-info--cancelMobileButton">Voltar</div>
+
+      <img class="pizza-modal-img" src="" />
+
+      <div class="pizza-info">
         <h1>--</h1>
-        <div class="pizzaInfo--desc">--</div>
-        <div class="pizzaInfo--sizearea">
-          <div class="pizzaInfo--sector">Tamanho</div>
-          <div class="pizzaInfo--sizes">
-            <div data-key="0" class="pizzaInfo--size">PEQUENA <span>--</span></div>
-            <div data-key="1" class="pizzaInfo--size">MÉDIO <span>--</span></div>
-            <div data-key="2" class="pizzaInfo--size selected">GRANDE <span>--</span></div>
+        <div class="pizza-info--desc">--</div>
+        <div class="pizza-info--sizearea">
+          <div class="pizza-info--sector">Tamanho</div>
+          <div class="pizza-info--sizes">
+            <div data-key="0" class="pizza-info--size">PEQUENA <span>--</span></div>
+            <div data-key="1" class="pizza-info--size">MÉDIO <span>--</span></div>
+            <div data-key="2" class="pizza-info--size selected">GRANDE <span>--</span></div>
           </div>
         </div>
-        <!--pizzaInfo--sizearea-->
 
-        <div class="pizzaInfo--pricearea">
-          <div class="pizzaInfo--sector">Preço</div>
-          <div class="pizzaInfo--price">
-            <div class="pizzaInfo--actualPrice">R$ --</div>
-            <div class="pizzaInfo--qtarea">
-              <button class="pizzaInfo--qtmenos">-</button>
-              <div class="pizzaInfo--qt">1</div>
-              <button class="pizzaInfo--qtmais">+</button>
+        <div class="pizza-info--pricearea">
+          <div class="pizza-info--sector">Preço</div>
+          <div class="pizza-info--price">
+            <div class="pizza-info--actualPrice">R$ --</div>
+            <div class="pizza-info--qtarea">
+              <button class="pizza-info--qtmenos">-</button>
+              <div class="pizza-info--qt">1</div>
+              <button class="pizza-info--qtmais">+</button>
             </div>
-            <!--pizzaInfo--qtarea-->
           </div>
-          <!--pizzaInfo--price-->
         </div>
-        <!--pizzaInfo--pricearea-->
 
-        <div class="pizzaInfo--addButton">Adicionar ao carrinho</div>
-        <div class="pizzaInfo--cancelButton">Cancelar</div>
-
+        <div class="pizza-info--addButton">Adicionar ao carrinho</div>
+        <div class="pizza-info--cancelButton">Cancelar</div>
       </div>
-      <!--pizzaInfo-->
     </div>
-    <!--pizzaWindowBody-->
   </div>
-  <!--pizzaWindowArea-->
 
   <script type="text/javascript" src="pizzas.js"></script>
   <script type="text/javascript" src="script.js"></script>
