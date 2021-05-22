@@ -107,15 +107,17 @@ const Modal = {
       );
 
       // id@size = identifier
-      let identifier = PizzaList[modalKey].id + "@" + size;
+      const identifier = PizzaList[modalKey].id + "@" + size;
 
       //* Return -1: if doesn't find an index with the same identifier
-      let key = cart.findIndex(item => item.identifier == identifier);
+      const key = cart.findIndex(item => item.identifier == identifier);
 
       // Pushing to Cart..
       if (key > -1) {
         cart[key].qt += modalQt; //* updates quantity only if it's already in cart
-      } else {
+      }
+
+      if (key === -1) {
         const cartItem = {
           identifier,
           id: PizzaList[modalKey].id,
@@ -125,7 +127,8 @@ const Modal = {
 
         cart.push(cartItem);
       }
-      updateCart();
+
+      Cart.updateCart();
       Modal.close();
     });
   },
