@@ -62,7 +62,9 @@
   <!--Modal-->
   <div class="pizza-modal">
     <div class="pizza-modal-content">
-      <div class="pizza-info--cancelMobileButton">Voltar</div>
+      <div class="pizza-info--cancelMobileButton" onclick=closeModal()>
+        Voltar
+      </div>
 
       <img class="pizza-modal-img" src="" />
 
@@ -91,13 +93,15 @@
         </div>
 
         <div class="pizza-info--addButton">Adicionar ao carrinho</div>
-        <div class="pizza-info--cancelButton">Cancelar</div>
+        <div class="pizza-info--cancelButton" onclick=closeModal()>
+          Cancelar
+        </div>
       </div>
     </div>
   </div>
 
-  <script type="text/javascript" src="pizzas.js"></script>
-  <script type="text/javascript" src="script.js"></script>
+  <script type="text/javascript" src="js/pizzaList.js"></script>
+  <script type="text/javascript" src="js/script.js"></script>
 </body>
 
 </html>

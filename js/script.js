@@ -2,6 +2,8 @@
 const sel = el => document.querySelector(el);
 const all = el => document.querySelectorAll(el);
 
+const pizzaSizeList = all(".pizza-info--size");
+
 const pizzaModal = document.querySelector(".pizza-modal");
 
 let cart = [];
@@ -33,53 +35,15 @@ function openPizzaItemModal(event) {
   event.preventDefault();
 
   setPizzaModalDOM(event);
+  openModal();
+}
 
-  // remove selected size item
-  sel(".pizza-info--size.selected").classList.remove("selected");
-
-
-
-  sel(".pizza-info--qt").innerHTML = modalQt;
+function openModal() {
   pizzaModal.style.opacity = 0;
   pizzaModal.style.display = "flex";
-
-  // faz efeito suave
   setTimeout(() => {
     pizzaModal.style.opacity = 1;
   }, 200);
-}
-
-function setPizzaModalDOM(e) {
-  //* Get the pizza key
-  let key = e.target.closest(".pizza-item").getAttribute("data-key");
-  modalKey = key;
-  modalQt = 1; // initial pizza qtd
-
-  sel(".pizza-modal-img").src = PizzaList[key].img;
-  sel(".pizza-info h1").innerHTML = PizzaList[key].name;
-  sel(".pizza-info--desc").innerHTML = PizzaList[key].description;
-  sel(".pizza-info--actualPrice").innerHTML = `R$ ${PizzaList[
-    key
-  ].prices[2].toFixed(2)}`;
-
-  //! preço por tamanho
-  all(".pizza-info--size").forEach((size, index) => {
-    pizzaPrice = PizzaList[parseInt(key)].prices[index];
-
-    size.addEventListener("click", () => {
-      sel(".pizza-info--size.selected").classList.remove("selected");
-      size.classList.add("selected");
-      pizzaPrice = PizzaList[parseInt(key)].prices[index];
-      sel(".pizza-info--actualPrice").innerHTML = `R$ ${(
-        pizzaPrice * modalQt
-      ).toFixed(2)}`;
-    });
-
-    //* big size selected!
-    if (index === 2) size.classList.add("selected");
-
-    size.querySelector("span").innerHTML = PizzaList[key].sizes[index];
-  });
 }
 
 function closeModal() {
@@ -89,14 +53,44 @@ function closeModal() {
   }, 500);
 }
 
-// Array of 2 Cancel Buttons
-all(".pizza-info--cancelButton, .pizza-info--cancelMobileButton").forEach(
-  btn => {
-    btn.addEventListener("click", closeModal);
-  }
-);
+function setPizzaModalDOM(e) {
+  let pizzaIndex = e.target.closest(".pizza-item").getAttribute("data-key");
+  modalKey = pizzaIndex;
+  modalQt = 1; // initial pizza qtd
 
-// seting the qt buttons
+  sel(".pizza-modal-img").src = PizzaList[pizzaIndex].img;
+  sel(".pizza-info h1").innerHTML = PizzaList[pizzaIndex].name;
+  sel(".pizza-info--desc").innerHTML = PizzaList[pizzaIndex].description;
+  sel(".pizza-info--actualPrice").innerHTML = `R$ ${PizzaList[
+    pizzaIndex
+  ].prices[2].toFixed(2)}`;
+
+  sel(".pizza-info--qt").innerHTML = modalQt;
+
+  setPizzaPrices(pizzaIndex);
+}
+
+function setPizzaPrices(pizzaIndex) {
+
+  pizzaSizeList.forEach((size, index) => {
+    pizzaPrice = PizzaList[parseInt(pizzaIndex)].prices[index];
+
+    size.addEventListener("click", () => {
+      sel(".pizza-info--size.selected").classList.remove("selected");
+      size.classList.add("selected");
+      pizzaPrice = PizzaList[parseInt(pizzaIndex)].prices[index];
+      sel(".pizza-info--actualPrice").innerHTML = `R$ ${(
+        pizzaPrice * modalQt
+      ).toFixed(2)}`;
+    });
+
+    size.querySelector("span").innerHTML = PizzaList[pizzaIndex].sizes[index];
+  });
+}
+
+
+
+// seting the quantity buttons
 sel(".pizza-info--qtmenos").addEventListener("click", () => {
   if (modalQt > 1) {
     modalQt--;
@@ -120,23 +114,10 @@ sel(".pizza-info--qtmais").addEventListener("click", () => {
   }
 });
 
-// select size
-all(".pizza-info--size").forEach((size, index) => {
-  size.addEventListener("click", e => {
-    // reset
-    sel(".pizza-info--size.selected").classList.remove("selected");
-
-    // add
-    size.classList.add("selected");
-  });
-});
-
 //* Add to Cart
 sel(".pizza-info--addButton").addEventListener("click", () => {
   // get selected size
-  let size = parseInt(
-    sel(".pizza-info--size.selected").getAttribute("data-key")
-  );
+  let size = parseInt(sel(".pizza-info--size.selected").getAttribute("data-key"));
 
   // id@size = identifier
   let identifier = PizzaList[modalKey].id + "@" + size;
