@@ -1,32 +1,14 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+  <link href="https://fonts.googleapis.com/css?family=Hepta+Slab:400,700|Lato:400,700&display=swap" rel="stylesheet">
   <meta charset="utf-8" />
-  <title>JS Pizza</title>
   <link rel="stylesheet" href="style.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico">
-  <link href="https://fonts.googleapis.com/css?family=Hepta+Slab:400,700|Lato:400,700&display=swap" rel="stylesheet">
+  <title>JS Pizza</title>
 </head>
-
 <body>
-  <div class="models">
-
-    <div class="cart--item">
-      <img src="" />
-      <div class="cart--item-nome">--</div>
-      <div class="cart--item--qtarea">
-        <button class="cart--item-qtmenos">-</button>
-        <div class="cart--item--qt">1</div>
-        <button class="cart--item-qtmais">+</button>
-      </div>
-    </div>
-    <!--cart--item-->
-
-  </div>
-  <!--models-->
-
   <header>
     <div class="menu-openner"><span>0</span>🛒</div>
   </header>
@@ -34,27 +16,31 @@
     <h1>JS Pizza <span>Menu</span></h1>
     <div class="pizza-area"></div>
   </main>
+
   <aside>
     <div class="cart--area">
+
       <div class="menu-closer">❌</div>
       <h1>Suas Pizzas</h1>
       <div class="cart"></div>
+
       <div class="cart--details">
-        <div class="cart--totalitem subtotal">
+        <div class="cart-value subtotal">
           <span>Subtotal</span>
-          <span>R$ --</span>
+          <span class="cart-value-subtotal">R$ --</span>
         </div>
-        <div class="cart--totalitem desconto">
+        <div class="cart-value desconto">
           <span>Desconto (-10%)</span>
-          <span>R$ --</span>
+          <span class="cart-value-desconto">R$ --</span>
         </div>
-        <div class="cart--totalitem total big">
+        <div class="cart-value total big">
           <span>Total</span>
-          <span>R$ --</span>
+          <span class="cart-value-total">R$ --</span>
         </div>
         <div class="cart--finalizar">Finalizar a compra</div>
       </div>
       <!--cart--details-->
+      
     </div>
     <!--cart--area-->
   </aside>

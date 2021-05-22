@@ -1,74 +1,94 @@
 const Cart = {
-  updateCart() {
+  subtotal: 0,
+  desconto: 0,
+  total: 0,
+
+  cartElement: sel("aside"),
+  cartPizzas: sel(".cart"),
+
+  setCartItem(pizzaItem, cartIndex) {
+    const pizzaSizeName = Cart.setPizzaSizeName(pizzaItem, cart[cartIndex]);
+    const pizzaName = `${pizzaItem.name} (${pizzaSizeName})`;
+
+    const cartItem = `
+    <div class="cart--item">
+      <img src=${pizzaItem.img} />
+      <div class="cart--item-nome">${pizzaName}</div>
+      <div class="cart--item--qtarea">
+        <button class="cart--item-qtmenos" onclick="Cart.removeCartItem(${cartIndex})">-</button>
+        <div class="cart--item--qt">${cart[cartIndex].qt}</div>
+        <button class="cart--item-qtmais" onclick="Cart.addCartItem(${cartIndex})">+</button>
+      </div>
+    </div>`;
+
+    return cartItem;
+  },
+
+  setPizzaSizeName(pizzaItem, cartItem) {
+    let pizzaSizeName;
+    switch (cartItem.size) {
+      case 0:
+        pizzaSizeName = "P";
+        Cart.subtotal += pizzaItem.prices[0] * cartItem.qt;
+        break;
+      case 1:
+        pizzaSizeName = "M";
+        Cart.subtotal += pizzaItem.prices[1] * cartItem.qt;
+        break;
+      case 2:
+        pizzaSizeName = "G";
+        Cart.subtotal += pizzaItem.prices[2] * cartItem.qt;
+        break;
+    }
+    return pizzaSizeName;
+  },
+
+  addCartItem(cartIndex) {
+    cart[cartIndex].qt++;
+    Cart.update();
+  },
+
+  removeCartItem(cartIndex) {
+    if (cart[cartIndex].qt > 1) {
+      cart[cartIndex].qt--;
+    } else {
+      cart.splice(cartIndex, 1);
+    }
+
+    Cart.update();
+  },
+
+  update() {
     // Mobile Cart
     sel(".menu-openner span").innerHTML = cart.length;
 
     if (cart.length > 0) {
-      sel("aside").classList.add("show");
-      sel(".cart").innerHTML = ""; // resets the cart to update
+      // resets the cart to update
+      Cart.cartPizzas.innerHTML = "";
+      Cart.subtotal = 0;
+      Cart.desconto = 0;
+      Cart.total = 0;
+      Cart.cartElement.classList.add("show");
 
-      let subtotal = 0;
-      let desconto = 0;
-      let total = 0;
-
-      for (let i in cart) {
+      for (let cartIndex in cart) {
         // find the object pizza from cart
-        let pizzaItem = PizzaList.find(item => item.id == cart[i].id);
-        //subtotal += pizzaItem.prices[i] * cart[i].qt;
+        let pizzaItem = PizzaList.find(
+          pizza => pizza.id === cart[cartIndex].id
+        );
 
-        let cartItem = sel(".models .cart--item").cloneNode(true);
+        const cartItem = Cart.setCartItem(pizzaItem, cartIndex);
+        Cart.cartPizzas.innerHTML += cartItem;
+      }
 
-        let pizzaSizeName;
-        switch (cart[i].size) {
-          case 0:
-            pizzaSizeName = "P";
-            subtotal += pizzaItem.prices[0] * cart[i].qt;
-            break;
-          case 1:
-            pizzaSizeName = "M";
-            subtotal += pizzaItem.prices[1] * cart[i].qt;
-            break;
-          case 2:
-            pizzaSizeName = "G";
-            subtotal += pizzaItem.prices[2] * cart[i].qt;
-            break;
-        }
+      Cart.desconto = Cart.subtotal * 0.1;
+      Cart.total = Cart.subtotal - Cart.desconto;
 
-        let pizzaName = `${pizzaItem.name} (${pizzaSizeName})`;
-        cartItem.querySelector("img").src = pizzaItem.img;
-        cartItem.querySelector(".cart--item-nome").innerHTML = pizzaName;
-        cartItem.querySelector(".cart--item--qt").innerHTML = cart[i].qt;
-
-        cartItem
-          .querySelector(".cart--item-qtmais")
-          .addEventListener("click", () => {
-            cart[i].qt++;
-            Cart.updateCart();
-          });
-
-        cartItem
-          .querySelector(".cart--item-qtmenos")
-          .addEventListener("click", () => {
-            if (cart[i].qt > 1) {
-              cart[i].qt--;
-            } else {
-              cart.splice(i, 1);
-            }
-            Cart.updateCart();
-          });
-
-        sel(".cart").append(cartItem);
-      } // end for in cart[]
-
-      desconto = subtotal * 0.1;
-      total = subtotal - desconto;
-
-      sel(".subtotal span:last-child").innerHTML = `R$ ${subtotal.toFixed(2)}`;
-      sel(".desconto span:last-child").innerHTML = `R$ ${desconto.toFixed(2)}`;
-      sel(".total span:last-child").innerHTML = `R$ ${total.toFixed(2)}`;
+      sel(".cart-value-subtotal").innerHTML = `R$ ${Cart.subtotal.toFixed(2)}`;
+      sel(".cart-value-desconto").innerHTML = `R$ ${Cart.desconto.toFixed(2)}`;
+      sel(".cart-value-total").innerHTML = `R$ ${Cart.total.toFixed(2)}`;
     } else {
-      sel("aside").classList.remove("show");
-      sel("aside").style.left = "100vw";
+      Cart.cartElement.classList.remove("show");
+      Cart.cartElement.style.left = "100vw";
     }
-  }
-}
+  },
+};

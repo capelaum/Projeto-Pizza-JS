@@ -39,9 +39,9 @@ const Modal = {
     sel(".pizza-modal-img").src = PizzaList[pizzaIndex].img;
     sel(".pizza-info h1").innerHTML = PizzaList[pizzaIndex].name;
     sel(".pizza-info--desc").innerHTML = PizzaList[pizzaIndex].description;
-    sel(".pizza-info--actualPrice").innerHTML = `R$ ${PizzaList[
-      pizzaIndex
-    ].prices[2].toFixed(2)}`;
+    sel(".pizza-info--actualPrice").innerHTML = `R$ ${formatPrice(
+      PizzaList[pizzaIndex].prices[2]
+    )}`;
 
     sel(".pizza-info--qt").innerHTML = modalQt;
 
@@ -52,14 +52,15 @@ const Modal = {
     Modal.pizzaSizeList.forEach((size, sizeIndex) => {
       // initial -> pizza G
       if (sizeIndex === 2) Modal.setSelectedSize(size);
+      pizzaPrice = PizzaList[Number(pizzaIndex)].prices[sizeIndex];
 
       size.addEventListener("click", () => {
         Modal.setSelectedSize(size);
 
         pizzaPrice = PizzaList[Number(pizzaIndex)].prices[sizeIndex];
-        sel(".pizza-info--actualPrice").innerHTML = `R$ ${(
+        sel(".pizza-info--actualPrice").innerHTML = `R$ ${formatPrice(
           pizzaPrice * modalQt
-        ).toFixed(2)}`;
+        )}`;
       });
 
       size.querySelector("span").innerHTML =
@@ -79,9 +80,9 @@ const Modal = {
         modalQt--;
         sel(".pizza-info--qt").innerHTML = modalQt;
 
-        sel(".pizza-info--actualPrice").innerHTML = `R$ ${(
+        sel(".pizza-info--actualPrice").innerHTML = `R$ ${formatPrice(
           pizzaPrice * modalQt
-        ).toFixed(2)}`;
+        )}`;
       }
     });
 
@@ -91,9 +92,9 @@ const Modal = {
         modalQt++;
         sel(".pizza-info--qt").innerHTML = modalQt;
 
-        sel(".pizza-info--actualPrice").innerHTML = `R$ ${(
+        sel(".pizza-info--actualPrice").innerHTML = `R$ ${formatPrice(
           pizzaPrice * modalQt
-        ).toFixed(2)}`;
+        )}`;
       }
     });
   },
@@ -108,15 +109,12 @@ const Modal = {
 
       // id@size = identifier
       const identifier = PizzaList[modalKey].id + "@" + size;
-
-      //* Return -1: if doesn't find an index with the same identifier
       const key = cart.findIndex(item => item.identifier == identifier);
 
-      // Pushing to Cart..
-      if (key > -1) {
-        cart[key].qt += modalQt; //* updates quantity only if it's already in cart
-      }
+      //* if it is already in cart
+      if (key > -1) cart[key].qt += modalQt;
 
+      //* if it is already in cart
       if (key === -1) {
         const cartItem = {
           identifier,
@@ -128,7 +126,7 @@ const Modal = {
         cart.push(cartItem);
       }
 
-      Cart.updateCart();
+      Cart.update();
       Modal.close();
     });
   },

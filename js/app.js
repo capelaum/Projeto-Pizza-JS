@@ -12,7 +12,7 @@ const setPizzaItemDOM = (pizza, index) => {
       <a href="" class="pizza-item--link">
         <div class="pizza-item--add" onclick="Modal.openPizzaItem(event)">+</div>
       </a>
-      <div class="pizza-item--price">R$ ${pizza.prices[2].toFixed(2)}</div>
+      <div class="pizza-item--price">R$ ${formatPrice(pizza.prices[2])}</div>
       <div class="pizza-item--name">${pizza.name} (G)</div>
       <div class="pizza-item--desc">${pizza.description}</div>
     </div>`;
@@ -42,5 +42,7 @@ sel(".menu-closer").addEventListener("click", () => {
   sel("aside").style.left = "100vw";
 });
 
-
+function formatPrice(price) {
+  return (price.toFixed(2)).toString().replace(".", ",");
+}
 

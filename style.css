@@ -319,7 +319,7 @@ h1 {
   padding: 0px 5px;
   color: #000;
 }
-.cart--totalitem {
+.cart-value {
   padding: 15px 0;
   border-top: 1px solid #79b9dd;
   color: #315970;
@@ -327,10 +327,10 @@ h1 {
   justify-content: space-between;
   font-size: 15px;
 }
-.cart--totalitem span:first-child {
+.cart-value span:first-child {
   font-weight: bold;
 }
-.cart--totalitem.big {
+.cart-value.big {
   font-size: 20px;
   color: #000;
   font-weight: bold;
